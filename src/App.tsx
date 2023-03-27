@@ -7,7 +7,7 @@ const App: FC<{}> = () => {
 
   return (
     <div className="App">
-  <RedditPostFetcher/>
+      <RedditPostFetcher />
     </div>
   )
 }

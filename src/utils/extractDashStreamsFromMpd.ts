@@ -1,7 +1,7 @@
 import { DOMParser } from 'xmldom';
-import StreamInfo from './tyoes/StreamInfo';
+import StreamInfo from '../tyoes/StreamInfo';
 
-async function parseMPD(mpdXML: string): Promise<StreamInfo[]> {
+async function extractDashStreamsFromMpd(mpdXML: string): Promise<StreamInfo[]> {
   const parser = new DOMParser();
   const mpd = parser.parseFromString(mpdXML, 'text/xml');
   const streamInfoList: StreamInfo[] = [];
@@ -56,4 +56,4 @@ async function parseMPD(mpdXML: string): Promise<StreamInfo[]> {
   return streamInfoList;
 }
 
-export default parseMPD;
+export default extractDashStreamsFromMpd;

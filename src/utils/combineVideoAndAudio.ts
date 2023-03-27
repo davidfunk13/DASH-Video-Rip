@@ -1,4 +1,4 @@
-import StreamInfo from "./tyoes/StreamInfo";
+import StreamInfo from "../tyoes/StreamInfo";
 
 function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, baseUrl: string) {
     const video = document.createElement('video');
@@ -22,8 +22,8 @@ function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, 
                 if (start < end) {
                     const bufferedVideo = videoSourceBuffer.buffered;
                     const bufferedAudio = audioSourceBuffer.buffered;
-                    videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
-                    audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
+                    // videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
+                    // audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
                 }
             }
         });
@@ -31,7 +31,7 @@ function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, 
         videoSourceBuffer.addEventListener('error', () => {
             console.error('Error occurred while appending video buffer.');
         });
-    });w
+    });
 
     audio.addEventListener('loadedmetadata', () => {
 
@@ -42,8 +42,8 @@ function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, 
                 if (start < end) {
                     const bufferedVideo = videoSourceBuffer.buffered;
                     const bufferedAudio = audioSourceBuffer.buffered;
-                    videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
-                    audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
+                    // videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
+                    // audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
                 }
             }
         });

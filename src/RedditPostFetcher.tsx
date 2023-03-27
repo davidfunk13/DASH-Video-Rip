@@ -1,8 +1,7 @@
 import React, { FC, useState } from "react";
-import extractDashMediaObject from "./extractDashMediaObject";
-import parseMPD from "./extractDashStreamsFromMpd";
-import extractDashStreamsFromMpd from "./extractDashStreamsFromMpd";
-import extractDashXMLFromPlaylist from "./extractXMLFromDashPlaylist";
+import extractDashMediaObject from "./utils/extractDashMediaObject";
+import extractDashStreamsFromMpd from "./utils/extractDashStreamsFromMpd";
+import extractDashXMLFromPlaylist from "./utils/extractXMLFromDashPlaylist";
 import StreamInfo from "./tyoes/StreamInfo";
 import VideoPlayer from "./VideoPlayer";
 
@@ -50,7 +49,7 @@ const RedditPostFetcher: FC<{}> = () => {
                 const urlBase = dashMedia.dash_url.replace(/\/[^/]*$/, '/');
                 setUrlBase(urlBase);
                 const xml = await extractDashXMLFromPlaylist(dashMedia.dash_url);
-                const parsed = await parseMPD(xml);
+                const parsed = await extractDashStreamsFromMpd(xml);
                 console.log(parsed);
                 setStreams(parsed);
             }

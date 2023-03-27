@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import combineVideoAndAudio from './combineVideoAndAudio';
+import combineVideoAndAudio from './utils/combineVideoAndAudio';
 import StreamInfo from './tyoes/StreamInfo';
 
 
