@@ -38,24 +38,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ streams, urlBase }) => {
 
     // Create the video source
     if (!highestQualityVideo || !highestQualityAudio) return;
-    console.log({ highestQualityVideo, highestQualityAudio })
-    combineVideoAndAudio(highestQualityVideo.file_name, highestQualityAudio.file_name, urlBase);
-    // console.log({ output });
-    // const videoSource = document.createElement('source');
-    // videoSource.src = urlBase + `${highestQualityVideo.file_name}`;
-    // videoSource.type = highestQualityVideo.mimeType;
-
-    // // Create the audio source
-    // const audioSource = document.createElement('source');
-    // audioSource.src = urlBase + `${highestQualityAudio.file_name}`;
-    // audioSource.type = highestQualityAudio.mimeType;
-    // console.log(audioSource)
-    // // Add the sources to the video element
-    // videoEl.appendChild(videoSource);
-    // videoEl.appendChild(audioSource);
-
-    // // Play the video
-    // videoEl.play();
+  
+    combineVideoAndAudio(highestQualityVideo, highestQualityAudio, urlBase);
+  
   }, [streams]);
 
   return (

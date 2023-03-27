@@ -1,5 +1,8 @@
-function combineVideoAndAudio(videoUrl: RequestInfo | URL, audioUrl: RequestInfo | URL, urlBase: string): MediaSource | null {
+import StreamInfo from "../tyoes/StreamInfo";
+
+function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, urlBase: string): MediaSource | null {
     const mediaSource = new MediaSource();
+
     let videoSourceBuffer: SourceBuffer, audioSourceBuffer: SourceBuffer;
 
     const appendVideo = (segment) => {
@@ -13,14 +16,18 @@ function combineVideoAndAudio(videoUrl: RequestInfo | URL, audioUrl: RequestInfo
     };
 
     const onSourceOpen = () => {
-        videoSourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.64001f"');
-        audioSourceBuffer = mediaSource.addSourceBuffer('audio/mp4; codecs="mp4a.40.2"');
+        console.log(videoStream, audioStream)
+        videoSourceBuffer = mediaSource.addSourceBuffer(`${videoStream.mimeType}; codecs="${videoStream.codecs}"`);
+        audioSourceBuffer = mediaSource.addSourceBuffer(`${audioStream.mimeType}; codecs="${audioStream.codecs}"`);
 
-        fetch(urlBase + videoUrl)
+        const videoUrl = urlBase + videoStream.file_name;
+        const audioUrl = urlBase + audioStream.file_name;
+
+        fetch(videoUrl)
             .then((response) => response.arrayBuffer())
             .then((buffer) => {
                 appendVideo(buffer);
-                return fetch(urlBase + audioUrl);
+                return fetch(audioUrl);
             })
             .then((response) => response.arrayBuffer())
             .then((buffer) => appendAudio(buffer))

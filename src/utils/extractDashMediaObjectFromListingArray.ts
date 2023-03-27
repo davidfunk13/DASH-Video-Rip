@@ -28,7 +28,7 @@ interface RedditChildrenDataMedia {
     reddit_video?: DashMediaObject
 }
 
-function extractDashMediaObject(objects: RedditObject[]): DashMediaObject | null {
+function extractDashMediaObjectFromListingArray(objects: RedditObject[]): DashMediaObject | null {
     for (const obj of objects) {
         if (obj.data.children[0].kind === 't3' && obj.data.children[0].data.media?.reddit_video) {
             return obj.data.children[0].data.media.reddit_video
@@ -37,4 +37,4 @@ function extractDashMediaObject(objects: RedditObject[]): DashMediaObject | null
     return null;
 }
 
-export default extractDashMediaObject;
+export default extractDashMediaObjectFromListingArray;

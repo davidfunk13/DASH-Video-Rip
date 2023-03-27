@@ -1,15 +1,9 @@
 import React from 'react';
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import RedditPostFetcher from './RedditPostFetcher';
 
 const App: FC<{}> = () => {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="App">
-      <RedditPostFetcher />
-    </div>
-  )
+  return <RedditPostFetcher />
 }
 
 export default App
