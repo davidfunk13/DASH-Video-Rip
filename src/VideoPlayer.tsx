@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
 import combineVideoAndAudio from './utils/combineVideoAndAudio';
+import React, { useRef, useEffect } from 'react';
 import StreamInfo from './tyoes/StreamInfo';
 
 
@@ -38,8 +38,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ streams, urlBase }) => {
 
     // Create the video source
     if (!highestQualityVideo || !highestQualityAudio) return;
-console.log({ highestQualityVideo, highestQualityAudio})
-    const output = combineVideoAndAudio(highestQualityVideo, highestQualityAudio, urlBase);
+    console.log({ highestQualityVideo, highestQualityAudio })
+    combineVideoAndAudio(highestQualityVideo.file_name, highestQualityAudio.file_name, urlBase);
     // console.log({ output });
     // const videoSource = document.createElement('source');
     // videoSource.src = urlBase + `${highestQualityVideo.file_name}`;
@@ -60,7 +60,9 @@ console.log({ highestQualityVideo, highestQualityAudio})
 
   return (
     <div>
-      <video width={"100%"}
+      <video
+        id={'video-player'}
+        width={"100%"}
         height={"100%"}
         ref={videoRef}
         controls

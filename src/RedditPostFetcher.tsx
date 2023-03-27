@@ -5,34 +5,6 @@ import extractDashXMLFromPlaylist from "./utils/extractXMLFromDashPlaylist";
 import StreamInfo from "./tyoes/StreamInfo";
 import VideoPlayer from "./VideoPlayer";
 
-interface Stream {
-    bandwidth: number;
-    url: string;
-}
-
-// function getHighestQualityStreams(streams: StreamInfo[]): { videoStream: Stream, audioStream: Stream } {
-//     let highestVideoBandwidth = 0;
-//     let highestVideoUrl = '';
-//     let highestAudioBandwidth = 0;
-//     let highestAudioUrl = '';
-
-//     streams.forEach((stream) => {
-//         if (stream.contentType === 'video' && stream.bandwidth > highestVideoBandwidth) {
-//             highestVideoBandwidth = stream.bandwidth;
-//             highestVideoUrl = stream.baseurl;
-//         } else if (stream.contentType === 'audio' && stream.bandwidth > highestAudioBandwidth) {
-//             highestAudioBandwidth = stream.bandwidth;
-//             highestAudioUrl = stream.baseurl;
-//         }
-//     });
-
-//     return {
-//         videoStream: { bandwidth: highestVideoBandwidth, url: highestVideoUrl },
-//         audioStream: { bandwidth: highestAudioBandwidth, url: highestAudioUrl },
-//     };
-// }
-// //   v.redd.it
-
 const RedditPostFetcher: FC<{}> = () => {
     const [postUrl, setPostUrl] = useState("");
     const [streams, setStreams] = useState<StreamInfo[]>([]);

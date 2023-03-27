@@ -1,85 +1,44 @@
-import StreamInfo from "../tyoes/StreamInfo";
-
-function combineVideoAndAudio(videoStream: StreamInfo, audioStream: StreamInfo, baseUrl: string) {
-    const video = document.createElement('video');
-    video.src = baseUrl + videoStream.file_name;
-    video.setAttribute('crossorigin', 'anonymous');
-
-    const audio = document.createElement('audio');
-    audio.src = baseUrl + audioStream.file_name;
-    audio.setAttribute('crossorigin', 'anonymous');
+function combineVideoAndAudio(videoUrl: RequestInfo | URL, audioUrl: RequestInfo | URL, urlBase: string): MediaSource | null {
     const mediaSource = new MediaSource();
-    const videoMime = `${videoStream.mimeType}; codecs="${videoStream.codecs}"`;
-    const audioMime = `${audioStream.mimeType}; codecs="${audioStream.codecs}"`;
-    const videoSourceBuffer = mediaSource.addSourceBuffer(videoMime);
-    const audioSourceBuffer = mediaSource.addSourceBuffer(audioMime);
+    let videoSourceBuffer: SourceBuffer, audioSourceBuffer: SourceBuffer;
 
-    video.addEventListener('loadedmetadata', () => {
-        videoSourceBuffer.addEventListener('updateend', () => {
-            if (!audio.paused && !video.paused && mediaSource.readyState === 'open') {
-                const start = Math.max(videoSourceBuffer.buffered.start(0), audioSourceBuffer.buffered.start(0));
-                const end = Math.min(videoSourceBuffer.buffered.end(0), audioSourceBuffer.buffered.end(0));
-                if (start < end) {
-                    const bufferedVideo = videoSourceBuffer.buffered;
-                    const bufferedAudio = audioSourceBuffer.buffered;
-                    // videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
-                    // audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
-                }
-            }
-        });
+    const appendVideo = (segment) => {
+        if (mediaSource.readyState !== "open") return;
+        videoSourceBuffer.appendBuffer(segment);
+    };
 
-        videoSourceBuffer.addEventListener('error', () => {
-            console.error('Error occurred while appending video buffer.');
-        });
-    });
+    const appendAudio = (segment) => {
+        if (mediaSource.readyState !== "open") return;
+        audioSourceBuffer.appendBuffer(segment);
+    };
 
-    audio.addEventListener('loadedmetadata', () => {
+    const onSourceOpen = () => {
+        videoSourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.64001f"');
+        audioSourceBuffer = mediaSource.addSourceBuffer('audio/mp4; codecs="mp4a.40.2"');
 
-        audioSourceBuffer.addEventListener('updateend', () => {
-            if (!audio.paused && !video.paused && mediaSource.readyState === 'open') {
-                const start = Math.max(videoSourceBuffer.buffered.start(0), audioSourceBuffer.buffered.start(0));
-                const end = Math.min(videoSourceBuffer.buffered.end(0), audioSourceBuffer.buffered.end(0));
-                if (start < end) {
-                    const bufferedVideo = videoSourceBuffer.buffered;
-                    const bufferedAudio = audioSourceBuffer.buffered;
-                    // videoSourceBuffer.appendBuffer(bufferedVideo.slice(start, end));
-                    // audioSourceBuffer.appendBuffer(bufferedAudio.slice(start, end));
-                }
-            }
-        });
+        fetch(urlBase + videoUrl)
+            .then((response) => response.arrayBuffer())
+            .then((buffer) => {
+                appendVideo(buffer);
+                return fetch(urlBase + audioUrl);
+            })
+            .then((response) => response.arrayBuffer())
+            .then((buffer) => appendAudio(buffer))
+            .catch((error) => console.error(error));
+    };
 
-        audioSourceBuffer.addEventListener('error', () => {
-            console.error('Error occurred while appending audio buffer.');
-        });
-    });
+    mediaSource.addEventListener("sourceopen", onSourceOpen);
 
-    // mediaSource.addEventListener('sourceopen', () => {
-    //   const mime = `video/mp4; codecs="${video?.codec}"`;
-    //   const videoSourceBuffer = mediaSource.addSourceBuffer(mime);
+    const videoElement = document.getElementById("video-player") as HTMLVideoElement;
 
-    //   const mime2 = `audio/mp4; codecs="${audio?.codec}"`;
-    //   const audioSourceBuffer = mediaSource.addSourceBuffer(mime2);
+    if (!videoElement) {
+        return null;
+    }
 
-    //   document.body.appendChild(video);
-    //   document.body.appendChild(audio);
-    //   video.play();
-    //   audio.play();
-    // });
+    videoElement.src = URL.createObjectURL(mediaSource);
+    videoElement.controls = true;
 
-    // video.addEventListener('ended', () => {
-    //   video.pause();
-    //   audio.pause();
-    // });
-
-    // video.addEventListener('error', () => {
-    //   console.error('Error occurred while loading video.');
-    // });
-
-    // audio.addEventListener('error', () => {
-    //   console.error('Error occurred while loading audio.');
-    // });
-
-    // document.body.appendChild(mediaSource);
+    return mediaSource;
 }
 
 export default combineVideoAndAudio;
